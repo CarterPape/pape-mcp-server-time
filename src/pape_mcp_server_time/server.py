@@ -1,7 +1,9 @@
+"""MCP Time Server for providing time-related tools."""
+
 import json
-from datetime import datetime, timedelta
+from collections.abc import Sequence
+from datetime import UTC, datetime, timedelta
 from enum import Enum
-from typing import Sequence
 from zoneinfo import ZoneInfo
 
 from mcp.server import Server
@@ -13,29 +15,50 @@ from tzlocal import get_localzone
 
 
 class TimeTools(str, Enum):
+    """Enum for available time tools."""
+
     GET_CURRENT_TIME = "get_current_time"
     CONVERT_TIME = "convert_time"
 
 
 class TimeResult(BaseModel):
+    """Represents the result of a time query."""
+
     timezone: str
     datetime: str
     is_dst: bool
 
 
 class TimeConversionResult(BaseModel):
+    """Represents the result of a time conversion."""
+
     source: TimeResult
     target: TimeResult
     time_difference: str
 
 
 class TimeConversionInput(BaseModel):
+    """Represents the input for time conversion."""
+
     source_tz: str
     time: str
     target_tz_list: list[str]
 
 
 def get_local_tz(local_tz_override: str | None = None) -> ZoneInfo:
+    """
+    Get the local timezone.
+
+    Args:
+        local_tz_override: Optional timezone string to override local detection.
+
+    Returns:
+        A ZoneInfo object representing the local timezone.
+
+    Raises:
+        McpError: If the local timezone cannot be determined.
+
+    """
     if local_tz_override:
         return ZoneInfo(local_tz_override)
 
@@ -43,21 +66,36 @@ def get_local_tz(local_tz_override: str | None = None) -> ZoneInfo:
     try:
         return get_localzone()
     except Exception as exception:
-        raise McpError(
-            f"Could not determine local timezone: {str(exception)}"
-        ) from exception
+        message = f"Could not determine local timezone: {exception!s}"
+        raise McpError(message) from exception
 
 
 def get_zoneinfo(timezone_name: str) -> ZoneInfo:
+    """
+    Get a ZoneInfo object for a given timezone name.
+
+    Args:
+        timezone_name: The IANA timezone name (e.g., 'America/New_York').
+
+    Returns:
+        A ZoneInfo object.
+
+    Raises:
+        McpError: If the timezone name is invalid.
+
+    """
     try:
         return ZoneInfo(timezone_name)
     except Exception as exception:
-        raise McpError(f"Invalid timezone: {str(exception)}") from exception
+        message = f"Invalid timezone: {exception!s}"
+        raise McpError(message) from exception
 
 
 class TimeServer:
+    """Provides methods for time-related operations."""
+
     def get_current_time(self, timezone_name: str) -> TimeResult:
-        """Get current time in specified timezone"""
+        """Get current time in specified timezone."""
         timezone = get_zoneinfo(timezone_name)
         current_time = datetime.now(timezone)
 
@@ -68,18 +106,20 @@ class TimeServer:
         )
 
     def convert_time(
-        self, source_tz: str, time_str: str, target_tz: str
+        self,
+        source_tz: str,
+        time_str: str,
+        target_tz: str,
     ) -> TimeConversionResult:
-        """Convert time between timezones"""
+        """Convert time between timezones."""
         source_timezone = get_zoneinfo(source_tz)
         target_timezone = get_zoneinfo(target_tz)
 
         try:
-            parsed_time = datetime.strptime(time_str, "%H:%M").time()
+            parsed_time = datetime.strptime(time_str, "%H:%M").astimezone(UTC).time()
         except ValueError as error:
-            raise ValueError(
-                "Invalid time format. Expected HH:MM [24-hour format]"
-            ) from error
+            message = "Invalid time format. Expected HH:MM [24-hour format]"
+            raise ValueError(message) from error
 
         now = datetime.now(source_timezone)
         source_time = datetime(
@@ -118,6 +158,13 @@ class TimeServer:
 
 
 async def serve(local_timezone: str | None = None) -> None:
+    """
+    Serve the MCP Time Server.
+
+    Args:
+        local_timezone: Optional timezone string to use as the local timezone.
+
+    """
     server = Server("mcp-time")
     time_server = TimeServer()
     local_tz = str(get_local_tz(local_timezone))
@@ -134,8 +181,12 @@ async def serve(local_timezone: str | None = None) -> None:
                     "properties": {
                         "timezone": {
                             "type": "string",
-                            "description": f"IANA timezone name (e.g., 'America/New_York', 'Europe/London'). Use '{local_tz}' as local timezone if no timezone provided by the user.",
-                        }
+                            "description": (
+                                "IANA timezone name (e.g., 'America/New_York', "
+                                f"'Europe/London'). Use '{local_tz}' as local timezone "
+                                "if no timezone provided by the user.",
+                            ),
+                        },
                     },
                     "required": ["timezone"],
                 },
@@ -148,7 +199,11 @@ async def serve(local_timezone: str | None = None) -> None:
                     "properties": {
                         "source_timezone": {
                             "type": "string",
-                            "description": f"Source IANA timezone name (e.g., 'America/New_York', 'Europe/London'). Use '{local_tz}' as local timezone if no source timezone provided by the user.",
+                            "description": (
+                                "Source IANA timezone name (e.g., 'America/New_York', "
+                                f"'Europe/London'). Use '{local_tz}' as local timezone "
+                                "if no source timezone provided by the user.",
+                            ),
                         },
                         "time": {
                             "type": "string",
@@ -156,7 +211,11 @@ async def serve(local_timezone: str | None = None) -> None:
                         },
                         "target_timezone": {
                             "type": "string",
-                            "description": f"Target IANA timezone name (e.g., 'Asia/Tokyo', 'America/San_Francisco'). Use '{local_tz}' as local timezone if no target timezone provided by the user.",
+                            "description": (
+                                "Target IANA timezone name (e.g., 'Asia/Tokyo', "
+                                f"'America/San_Francisco'). Use '{local_tz}' as local "
+                                "timezone if no target timezone provided by the user.",
+                            ),
                         },
                     },
                     "required": ["source_timezone", "time", "target_timezone"],
@@ -166,41 +225,42 @@ async def serve(local_timezone: str | None = None) -> None:
 
     @server.call_tool()
     async def call_tool(
-        name: str, arguments: dict
+        name: str,
+        arguments: dict,
     ) -> Sequence[TextContent | ImageContent | EmbeddedResource]:
         """Handle tool calls for time queries."""
-        try:
-            match name:
-                case TimeTools.GET_CURRENT_TIME.value:
-                    timezone = arguments.get("timezone")
-                    if not timezone:
-                        raise ValueError("Missing required argument: timezone")
+        match name:
+            case TimeTools.GET_CURRENT_TIME.value:
+                timezone = arguments.get("timezone")
+                if not timezone:
+                    message = "Missing required argument: timezone"
+                    raise ValueError(message)
 
-                    result = time_server.get_current_time(timezone)
+                result = time_server.get_current_time(timezone)
 
-                case TimeTools.CONVERT_TIME.value:
-                    if not all(
-                        k in arguments
-                        for k in ["source_timezone", "time", "target_timezone"]
-                    ):
-                        raise ValueError("Missing required arguments")
+            case TimeTools.CONVERT_TIME.value:
+                if not all(
+                    k in arguments
+                    for k in ["source_timezone", "time", "target_timezone"]
+                ):
+                    message = "Missing required arguments"
+                    raise ValueError(message)
 
-                    result = time_server.convert_time(
-                        arguments["source_timezone"],
-                        arguments["time"],
-                        arguments["target_timezone"],
-                    )
-                case _:
-                    raise ValueError(f"Unknown tool: {name}")
+                result = time_server.convert_time(
+                    arguments["source_timezone"],
+                    arguments["time"],
+                    arguments["target_timezone"],
+                )
+            case _:
+                message = f"Unknown tool: {name}"
+                raise ValueError(message)
 
-            return [
-                TextContent(type="text", text=json.dumps(result.model_dump(), indent=2))
-            ]
-
-        except Exception as exception:
-            raise ValueError(
-                f"Error processing mcp-server-time query: {str(exception)}"
-            ) from exception
+        return [
+            TextContent(
+                type="text",
+                text=json.dumps(result.model_dump(), indent=2),
+            ),
+        ]
 
     options = server.create_initialization_options()
     async with stdio_server() as (read_stream, write_stream):

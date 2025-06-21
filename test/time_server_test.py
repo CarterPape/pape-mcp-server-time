@@ -1,11 +1,16 @@
+"""Tests for the MCP server."""
+
+from typing import Any
+
 import pytest
 from freezegun import freeze_time
 from mcp.shared.exceptions import McpError
+
 from pape_mcp_server_time.server import TimeServer
 
 
 @pytest.mark.parametrize(
-    "test_time,timezone,expected",
+    ("test_time", "timezone", "expected"),
     [
         # UTC+1 non-DST
         (
@@ -69,7 +74,11 @@ from pape_mcp_server_time.server import TimeServer
         ),
     ],
 )
-def test_get_current_time(test_time, timezone, expected):
+def test_get_current_time(
+    test_time: str,
+    timezone: str,
+    expected: dict[str, str | bool],
+) -> None:
     with freeze_time(test_time):
         time_server = TimeServer()
         result = time_server.get_current_time(timezone)
@@ -78,7 +87,7 @@ def test_get_current_time(test_time, timezone, expected):
         assert result.is_dst == expected["is_dst"]
 
 
-def test_get_current_time_with_invalid_timezone():
+def test_get_current_time_with_invalid_timezone() -> None:
     time_server = TimeServer()
     with pytest.raises(
         McpError,
@@ -88,7 +97,7 @@ def test_get_current_time_with_invalid_timezone():
 
 
 @pytest.mark.parametrize(
-    "source_tz,time_str,target_tz,expected_error",
+    ("source_tz", "time_str", "target_tz", "expected_error"),
     [
         (
             "invalid_tz",
@@ -110,16 +119,22 @@ def test_get_current_time_with_invalid_timezone():
         ),
     ],
 )
-def test_convert_time_errors(source_tz, time_str, target_tz, expected_error):
+def test_convert_time_errors(
+    source_tz: str,
+    time_str: str,
+    target_tz: str,
+    expected_error: str,
+) -> None:
     time_server = TimeServer()
     with pytest.raises((McpError, ValueError), match=expected_error):
         time_server.convert_time(source_tz, time_str, target_tz)
 
 
 @pytest.mark.parametrize(
-    "test_time,source_tz,time_str,target_tz,expected",
+    ("test_time", "source_tz", "time_str", "target_tz", "expected"),
     [
-        # Basic case: Standard time conversion between Warsaw and London (1 hour difference)
+        # Basic case: Standard time conversion between Warsaw and London
+        # (1 hour difference)
         # Warsaw is UTC+1, London is UTC+0
         (
             "2024-01-01 00:00:00+00:00",
@@ -163,7 +178,8 @@ def test_convert_time_errors(source_tz, time_str, target_tz, expected_error):
         ),
         # Edge case: Different DST periods between Europe and USA
         # Europe ends DST on Oct 27, while USA waits until Nov 3
-        # This creates a one-week period where Europe is in standard time but USA still observes DST
+        # This creates a one-week period where Europe is in standard time but USA
+        # still observes DST
         (
             "2024-10-28 00:00:00+00:00",
             "Europe/Warsaw",
@@ -444,7 +460,13 @@ def test_convert_time_errors(source_tz, time_str, target_tz, expected_error):
         ),
     ],
 )
-def test_convert_time(test_time, source_tz, time_str, target_tz, expected):
+def test_convert_time(
+    test_time: str,
+    source_tz: str,
+    time_str: str,
+    target_tz: str,
+    expected: dict[str, Any],
+) -> None:
     with freeze_time(test_time):
         time_server = TimeServer()
         result = time_server.convert_time(source_tz, time_str, target_tz)

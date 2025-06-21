@@ -1,13 +1,18 @@
+"""MCP server init file."""
+
+import argparse
+import asyncio
+
 from .server import serve
 
 
-def main():
-    """MCP Time Server - Time and timezone conversion functionality for MCP"""
-    import argparse
-    import asyncio
-
+def main() -> None:
+    """MCP Time Server - Time and timezone conversion functionality for MCP."""
     parser = argparse.ArgumentParser(
-        description="give a model the ability to handle time queries and timezone conversions"
+        description=(
+            "give a model the ability to handle time queries "
+            "and timezone conversions"
+        ),
     )
     parser.add_argument("--local-timezone", type=str, help="Override local timezone")
 
