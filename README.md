@@ -5,14 +5,14 @@ A Model Context Protocol server that provides time and timezone conversion capab
 ### Available Tools
 
 - `get_current_time` - Get current time in a specific timezone or system timezone.
-  - Required arguments:
-    - `timezone` (string): IANA timezone name (e.g., 'America/New_York', 'Europe/London')
+    - Required arguments:
+        - `timezone` (string): IANA timezone name (e.g., 'America/New_York', 'Europe/London')
 
 - `convert_time` - Convert time between timezones.
-  - Required arguments:
-    - `source_timezone` (string): Source IANA timezone name
-    - `time` (string): Time in 24-hour format (HH:MM)
-    - `target_timezone` (string): Target IANA timezone name
+    - Required arguments:
+        - `source_timezone` (string): Source IANA timezone name
+        - `time` (string): Time in 24-hour format (HH:MM)
+        - `target_timezone` (string): Target IANA timezone name
 
 ## Installation
 
@@ -54,6 +54,7 @@ Add to your Claude settings:
   }
 }
 ```
+
 </details>
 
 <details>
@@ -69,6 +70,7 @@ Add to your Claude settings:
   }
 }
 ```
+
 </details>
 
 <details>
@@ -84,6 +86,7 @@ Add to your Claude settings:
   }
 }
 ```
+
 </details>
 
 ### Configure for Zed
@@ -101,6 +104,7 @@ Add to your Zed settings.json:
   }
 ],
 ```
+
 </details>
 
 <details>
@@ -114,6 +118,7 @@ Add to your Zed settings.json:
   }
 },
 ```
+
 </details>
 
 ### Configure for VS Code
@@ -145,6 +150,7 @@ Optionally, you can add it to a file called `.vscode/mcp.json` in your workspace
   }
 }
 ```
+
 </details>
 
 <details>
@@ -162,6 +168,7 @@ Optionally, you can add it to a file called `.vscode/mcp.json` in your workspace
   }
 }
 ```
+
 </details>
 
 ### Customization - System Timezone
@@ -169,6 +176,7 @@ Optionally, you can add it to a file called `.vscode/mcp.json` in your workspace
 By default, the server automatically detects your system's timezone. You can override this by adding the argument `--local-timezone` to the `args` list in the configuration.
 
 Example:
+
 ```json
 {
   "command": "python",
@@ -179,6 +187,7 @@ Example:
 ## Example Interactions
 
 1. Get current time:
+
 ```json
 {
   "name": "get_current_time",
@@ -187,7 +196,9 @@ Example:
   }
 }
 ```
+
 Response:
+
 ```json
 {
   "timezone": "Europe/Warsaw",
@@ -197,6 +208,7 @@ Response:
 ```
 
 2. Convert time between timezones:
+
 ```json
 {
   "name": "convert_time",
@@ -207,7 +219,9 @@ Response:
   }
 }
 ```
+
 Response:
+
 ```json
 {
   "source": {
@@ -260,7 +274,7 @@ docker build -t mcp/time .
 We encourage contributions to help expand and improve mcp-server-time. Whether you want to add new time-related tools, enhance existing functionality, or improve documentation, your input is valuable.
 
 For examples of other MCP servers and implementation patterns, see:
-https://github.com/modelcontextprotocol/servers
+<https://github.com/modelcontextprotocol/servers>
 
 Pull requests are welcome! Feel free to contribute new ideas, bug fixes, or enhancements to make mcp-server-time even more powerful and useful.
 
