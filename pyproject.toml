@@ -44,3 +44,17 @@ dev-dependencies = [
 
 [tool.coverage.run]
 omit = ["test/*"]
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = [
+    "D212", # multi-line-summary-first-line - Conflicts with preferred rule D213
+    "D203", # blank-line-before-class - Conflicts with preferred rule D211
+]
+
+[tool.ruff.lint.per-file-ignores]
+"test/*" = [
+    "SLF001", # protected-access
+    "S101", # assert
+    "D103", # undocumented-public-function 
+]
