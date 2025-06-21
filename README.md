@@ -19,20 +19,20 @@ A Model Context Protocol server that provides time and timezone conversion capab
 ### Using uv (recommended)
 
 When using [`uv`](https://docs.astral.sh/uv/) no specific installation is needed. We will
-use [`uvx`](https://docs.astral.sh/uv/guides/tools/) to directly run *mcp-server-time*.
+use [`uvx`](https://docs.astral.sh/uv/guides/tools/) to directly run *pape-mcp-server-time*.
 
 ### Using PIP
 
-Alternatively you can install `mcp-server-time` via pip:
+Alternatively you can install `pape-mcp-server-time` via pip:
 
 ```bash
-pip install mcp-server-time
+pip install pape-mcp-server-time
 ```
 
 After installation, you can run it as a script using:
 
 ```bash
-python -m mcp_server_time
+python -m pape_mcp_server_time
 ```
 
 ## Configuration
@@ -49,23 +49,7 @@ Add to your Claude settings:
   "mcpServers": {
     "time": {
       "command": "uvx",
-      "args": ["mcp-server-time"]
-    }
-  }
-}
-```
-
-</details>
-
-<details>
-<summary>Using docker</summary>
-
-```json
-{
-  "mcpServers": {
-    "time": {
-      "command": "docker",
-      "args": ["run", "-i", "--rm", "mcp/time"]
+      "args": ["pape-mcp-server-time"]
     }
   }
 }
@@ -81,7 +65,7 @@ Add to your Claude settings:
   "mcpServers": {
     "time": {
       "command": "python",
-      "args": ["-m", "mcp_server_time"]
+      "args": ["-m", "pape_mcp_server_time"]
     }
   }
 }
@@ -98,9 +82,9 @@ Add to your Zed settings.json:
 
 ```json
 "context_servers": [
-  "mcp-server-time": {
+  "pape-mcp-server-time": {
     "command": "uvx",
-    "args": ["mcp-server-time"]
+    "args": ["pape-mcp-server-time"]
   }
 ],
 ```
@@ -112,9 +96,9 @@ Add to your Zed settings.json:
 
 ```json
 "context_servers": {
-  "mcp-server-time": {
+  "pape-mcp-server-time": {
     "command": "python",
-    "args": ["-m", "mcp_server_time"]
+    "args": ["-m", "pape_mcp_server_time"]
   }
 },
 ```
@@ -125,9 +109,7 @@ Add to your Zed settings.json:
 
 For quick installation, use one of the one-click install buttons below...
 
-[![Install with UV in VS Code](https://img.shields.io/badge/VS_Code-UV-0098FF?style=flat-square&logo=visualstudiocode&logoColor=white)](https://insiders.vscode.dev/redirect/mcp/install?name=time&config=%7B%22command%22%3A%22uvx%22%2C%22args%22%3A%5B%22mcp-server-time%22%5D%7D) [![Install with UV in VS Code Insiders](https://img.shields.io/badge/VS_Code_Insiders-UV-24bfa5?style=flat-square&logo=visualstudiocode&logoColor=white)](https://insiders.vscode.dev/redirect/mcp/install?name=time&config=%7B%22command%22%3A%22uvx%22%2C%22args%22%3A%5B%22mcp-server-time%22%5D%7D&quality=insiders)
-
-[![Install with Docker in VS Code](https://img.shields.io/badge/VS_Code-Docker-0098FF?style=flat-square&logo=visualstudiocode&logoColor=white)](https://insiders.vscode.dev/redirect/mcp/install?name=time&config=%7B%22command%22%3A%22docker%22%2C%22args%22%3A%5B%22run%22%2C%22-i%22%2C%22--rm%22%2C%22mcp%2Ftime%22%5D%7D) [![Install with Docker in VS Code Insiders](https://img.shields.io/badge/VS_Code_Insiders-Docker-24bfa5?style=flat-square&logo=visualstudiocode&logoColor=white)](https://insiders.vscode.dev/redirect/mcp/install?name=time&config=%7B%22command%22%3A%22docker%22%2C%22args%22%3A%5B%22run%22%2C%22-i%22%2C%22--rm%22%2C%22mcp%2Ftime%22%5D%7D&quality=insiders)
+[![Install with UV in VS Code](https://img.shields.io/badge/VS_Code-UV-0098FF?style=flat-square&logo=visualstudiocode&logoColor=white)](https://insiders.vscode.dev/redirect/mcp/install?name=time&config=%7B%22command%22%3A%22uvx%22%2C%22args%22%3A%5B%pape-mcp-server-time%22%5D%7D) [![Install with UV in VS Code Insiders](https://img.shields.io/badge/VS_Code_Insiders-UV-24bfa5?style=flat-square&logo=visualstudiocode&logoColor=white)](https://insiders.vscode.dev/redirect/mcp/install?name=time&config=%7B%22command%22%3A%22uvx%22%2C%22args%22%3A%5B%pape-mcp-server-time%22%5D%7D&quality=insiders)
 
 For manual installation, add the following JSON block to your User Settings (JSON) file in VS Code. You can do this by pressing `Ctrl + Shift + P` and typing `Preferences: Open User Settings (JSON)`.
 
@@ -144,7 +126,7 @@ Optionally, you can add it to a file called `.vscode/mcp.json` in your workspace
     "servers": {
       "time": {
         "command": "uvx",
-        "args": ["mcp-server-time"]
+        "args": ["pape-mcp-server-time"]
       }
     }
   }
@@ -153,23 +135,6 @@ Optionally, you can add it to a file called `.vscode/mcp.json` in your workspace
 
 </details>
 
-<details>
-<summary>Using Docker</summary>
-
-```json
-{
-  "mcp": {
-    "servers": {
-      "time": {
-        "command": "docker",
-        "args": ["run", "-i", "--rm", "mcp/time"]
-      }
-    }
-  }
-}
-```
-
-</details>
 
 ### Customization - System Timezone
 
@@ -180,7 +145,7 @@ Example:
 ```json
 {
   "command": "python",
-  "args": ["-m", "mcp_server_time", "--local-timezone=America/New_York"]
+  "args": ["-m", "pape_mcp_server_time", "--local-timezone=America/New_York"]
 }
 ```
 
@@ -243,14 +208,14 @@ Response:
 You can use the MCP inspector to debug the server. For uvx installations:
 
 ```bash
-npx @modelcontextprotocol/inspector uvx mcp-server-time
+npx @modelcontextprotocol/inspector uvx pape-mcp-server-time
 ```
 
 Or if you've installed the package in a specific directory or are developing on it:
 
 ```bash
 cd path/to/servers/src/time
-npx @modelcontextprotocol/inspector uv run mcp-server-time
+npx @modelcontextprotocol/inspector uv run pape-mcp-server-time
 ```
 
 ## Examples of Questions for Claude
@@ -260,24 +225,15 @@ npx @modelcontextprotocol/inspector uv run mcp-server-time
 3. "When it's 4 PM in New York, what time is it in London?"
 4. "Convert 9:30 AM Tokyo time to New York time"
 
-## Build
-
-Docker build:
-
-```bash
-cd src/time
-docker build -t mcp/time .
-```
-
 ## Contributing
 
-We encourage contributions to help expand and improve mcp-server-time. Whether you want to add new time-related tools, enhance existing functionality, or improve documentation, your input is valuable.
+We encourage contributions to help expand and improve pape-mcp-server-time. Whether you want to add new time-related tools, enhance existing functionality, or improve documentation, your input is valuable.
 
 For examples of other MCP servers and implementation patterns, see:
 <https://github.com/modelcontextprotocol/servers>
 
-Pull requests are welcome! Feel free to contribute new ideas, bug fixes, or enhancements to make mcp-server-time even more powerful and useful.
+Pull requests are welcome! Feel free to contribute new ideas, bug fixes, or enhancements to make pape-mcp-server-time even more powerful and useful.
 
 ## License
 
-mcp-server-time is licensed under the MIT License. This means you are free to use, modify, and distribute the software, subject to the terms and conditions of the MIT License. For more details, please see the LICENSE file in the project repository.
+pape-mcp-server-time is licensed under the MIT License. This means you are free to use, modify, and distribute the software, subject to the terms and conditions of the MIT License. For more details, please see the LICENSE file in the project repository.
