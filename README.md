@@ -2,7 +2,7 @@
 
 A Model Context Protocol server that provides time and timezone conversion capabilities. This server enables LLMs to get current time information and perform timezone conversions using IANA timezone names, with automatic system timezone detection.
 
-### Available Tools
+## Available Tools
 
 - `get_current_time` - Get current time in a specific timezone or system timezone.
     - Required arguments:
@@ -153,55 +153,55 @@ Example:
 
 1. Get current time:
 
-```json
-{
-  "name": "get_current_time",
-  "arguments": {
-    "timezone": "Europe/Warsaw"
-  }
-}
-```
+    ```json
+    {
+      "name": "get_current_time",
+      "arguments": {
+        "timezone": "Europe/Warsaw"
+      }
+    }
+    ```
 
-Response:
+    Response:
 
-```json
-{
-  "timezone": "Europe/Warsaw",
-  "datetime": "2024-01-01T13:00:00+01:00",
-  "is_dst": false
-}
-```
+    ```json
+    {
+      "timezone": "Europe/Warsaw",
+      "datetime": "2024-01-01T13:00:00+01:00",
+      "is_dst": false
+    }
+    ```
 
 2. Convert time between timezones:
 
-```json
-{
-  "name": "convert_time",
-  "arguments": {
-    "source_timezone": "America/New_York",
-    "time": "16:30",
-    "target_timezone": "Asia/Tokyo"
-  }
-}
-```
+    ```json
+    {
+      "name": "convert_time",
+      "arguments": {
+        "source_timezone": "America/New_York",
+        "time": "16:30",
+        "target_timezone": "Asia/Tokyo"
+      }
+    }
+    ```
 
-Response:
+    Response:
 
-```json
-{
-  "source": {
-    "timezone": "America/New_York",
-    "datetime": "2024-01-01T12:30:00-05:00",
-    "is_dst": false
-  },
-  "target": {
-    "timezone": "Asia/Tokyo",
-    "datetime": "2024-01-01T12:30:00+09:00",
-    "is_dst": false
-  },
-  "time_difference": "+13.0h",
-}
-```
+    ```json
+    {
+      "source": {
+        "timezone": "America/New_York",
+        "datetime": "2024-01-01T12:30:00-05:00",
+        "is_dst": false
+      },
+      "target": {
+        "timezone": "Asia/Tokyo",
+        "datetime": "2024-01-01T12:30:00+09:00",
+        "is_dst": false
+      },
+      "time_difference": "+13.0h",
+    }
+    ```
 
 ## Debugging
 
